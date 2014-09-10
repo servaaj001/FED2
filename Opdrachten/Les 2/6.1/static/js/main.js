@@ -2,7 +2,7 @@ var geo = geo || {};
 
 	(function() {
 
-		var gps = {
+		var controller = {
 			init = function(){
 				debug.message();
 			},
