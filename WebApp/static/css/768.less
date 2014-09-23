@@ -1,0 +1,72 @@
+@import "colors"; // colors.less
+
+/* layout / column */
+.l25 {
+	width: 25%;
+}
+.l33 {
+	width: 33.33%;
+}
+.l50 {
+	width: 50%;
+}
+.l66 {
+	width: 66.66%;
+}
+.l75 {
+	width: 75%;
+}
+.l100 {
+	width: 100%;
+}
+.shide, .mhide, .xlhide {
+	display: block;
+}
+.lhide {
+	display: none;
+}
+.modules_right {
+	margin-top: 6em;
+}
+#mainmenu {
+	width: auto;
+
+	> ul {
+		display: block!important;
+		clear: none;
+
+		li {
+			display: inline-block;
+			margin-left: 2em;
+
+			border-top: 0px solid @lightgrey;
+			padding: 0;
+
+			a {
+				text-transform: uppercase;
+			}
+
+			ul {
+				position: absolute;
+				display: none;
+				background: @white;
+				border: 1px solid @lightgrey;
+
+				li {
+					display: block;
+				}
+			}
+		}
+	}
+}
+a#pull {
+	display: none;
+}
+.quote {
+	p {
+		padding: 0.4em 13%;
+		font-weight: 300;
+		font-size: 2.5em;
+		line-height: 1.4em;
+	}
+}
