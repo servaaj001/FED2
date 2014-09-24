@@ -97,7 +97,7 @@ var app = app || {};
 					'movies': app.content.movies
 			}
 
-			//dit zorgt ervoor dat de src van img tag veranderd naar wat er staat in this.cover
+			// plaatst de source van de plaatjes in de img tag
 			var directives = {
 				movies: {
 					cover: {
