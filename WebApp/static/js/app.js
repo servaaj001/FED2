@@ -178,39 +178,41 @@ var biosApp = biosApp || {};
 							return this.url_profile;
 						}
 					},
+					// data-bind character
 					character: {
 						href: function(params){
 							return this.url_character;
 						}
 					}
 				},
-
+				// data-bind reviews
 				reviews: {
+					// aangemaakte datum
 					created: {
 						datetime: function(params){
 							return this.created_at;
 						}
 					},
+					// upgedate datum
 					updated: {
 						datetime: function(params){
 							return this.updated_at;
 						}
 					},
+					// de review zelf
 					review_text: {
 						text: function () {
 							return this.review_text;
 						}
 					}
-
 				}
 			}
-
+			// vul alles in met de directives in de section detail
 			Transparency.render(document.querySelector('section[data-route="detail"]'),array, directives);
 		},
 
 		//maak de genres navigatie aan
 		genresNavigatie: function(array){
-
 			genreUrl = {
 				genreLink: {
 					href: function(params){
@@ -218,7 +220,7 @@ var biosApp = biosApp || {};
 					}
 				}
 			}
-
+			//  
 			Transparency.render(document.querySelector('ul[data-bind="genres"]'), array, genreUrl);
 		},
 
@@ -268,7 +270,7 @@ var biosApp = biosApp || {};
 				data[i].reviewScore = _.reduce(data[i].reviewScore, function(memo, num){ 
 					return memo + num.reviewScore; 
 				}, 0 ) / data[i].reviewScore.length;
-			// is er geen review, zet dan deze string
+			// is er geen review, zet dan no score neer
 		} else {
 			data[i].reviewScore = "No score";
 		}
@@ -293,11 +295,10 @@ var biosApp = biosApp || {};
 	},
 
 	getDetail: function(key, array){
-		
+		// detailObj = underscore filter functie (movie)
 		detailObj = _.filter(array, function (movie) {
       	  return movie.id == key;
         });
-
 
 		// zet de templater aan het werk
 		biosApp.sections.detail(detailObj[0]);
@@ -323,7 +324,6 @@ var biosApp = biosApp || {};
 				console.log('blokje');
 				// toggle de active class van de main
 				document.querySelector("#main").classList.toggle("active");
-				
 			})
 		}
 	}
