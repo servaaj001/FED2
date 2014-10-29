@@ -1,47 +1,52 @@
 // NameSpace bestaat biosApp al verander deze dan niet en of maak nieuwe aan
 var biosApp = biosApp || {};
 
+
+
 // self invoking anonymous function (IIFE) functie dus niet meer in de global scope
 (function(){
+
+	biosApp.apiLink = "http://dennistel.nl/movies";
 
 	biosApp.controller = {
 
 		init:function() {
-			// Roep in de 'init'-methode van het 'controller'-object, de 'init'-methode van het 'api'-object aan
-			biosApp.api.init();
-			// Roep in de 'init'-methode van het 'controller'-object, de 'init'-methode van het 'router'-object aan
+			// Roep de init in apiOphalen aan
+			biosApp.apiOphalen.init();
+			// Roep de init in router aan
 			biosApp.router.init();
-			// Roep in de 'init'-methode van het 'controller'-object, de 'init'-methode van het 'sections'-object aan
+			// Roep de init in sections aan
 			biosApp.sections.init();
-
+			// Roep de init in mcHammer aan
 			biosApp.mcHammer.init();
 		}
 	}
 
 	// object om de api op te halen en te parsen met JSON.
-	biosApp.api = {
+	biosApp.apiOphalen = {
 		init: function(){
 			// als movies in localStorage zit
 			if("movies" in localStorage){
-				// doe dan biosApp.api.parseJson op storage get en haal de movies op
+				// doe dan biosApp.apiOphalen.parseJson op storage get en haal de movies op
 				this.parseJson(biosApp.storage.get("movies"))
 				console.log('ik zit in localStorage');
 			} 
 			// probeer anders de api opnieuw op te halen
 			else {
 				this.getApi()
-				console.log('geen localStorage');
+				console.log('jammer joh, geen localStorage');
 			}
 		},
 		// haal/get get json bestand op mbv het xhr object met de parseJson functie hieronder
 		getApi: function(){
-			biosApp.xhr.trigger("GET", "http://dennistel.nl/movies", biosApp.api.parseJson )
+			biosApp.xhr.trigger("GET", biosApp.apiLink , biosApp.apiOphalen.parseJson )
 		},
-		// 
+		// parse de api
 		parseJson: function(data){
-			var parsedData = JSON.parse(data);
-			biosApp.underscore.averageScore(parsedData);
-			biosApp.contentHTML.genresNav(parsedData);
+			// de parsed data heet nu omgezetteData
+			var omgezetteData = JSON.parse(data);
+			biosApp.underscore.averageScore(omgezetteData);
+			biosApp.contentHTML.genresNav(omgezetteData);
 		}
 	}
 
@@ -107,6 +112,7 @@ var biosApp = biosApp || {};
 		movies: function(array){
 			var moviesContent = {
 				'header': "Favorite movies",
+				// moviedatabase meegeven als attribuut
 				'movies': array
 			}
 
@@ -132,31 +138,41 @@ var biosApp = biosApp || {};
 			Transparency.render(document.querySelector('section[data-route="movies"]'),moviesContent, directives);
 		},
 
-		//detail pagina
+		//detail pagina manipuleren
 		detail: function(array){
-
-
-						// doorloop de reviews om de timestamps te converteren naar leesbare data en voeg die toe met een nieuwe key
+			// doorloop de reviews om de timestamps te converteren naar leesbare data en voeg die toe met een nieuwe key
+			// i krijgt de waarde 0, als de reviews kleiner zijn dan 0 (geen reviews) i++ = 0
 			for (i = 0; i < array.reviews.length; i++) { 
 				array.reviews[i].createdDate = biosApp.timestampConverter.timestamp(array.reviews[i].created_at).toLocaleString();
 				array.reviews[i].updatedDate = biosApp.timestampConverter.timestamp(array.reviews[i].updated_at).toLocaleString();
 			}
-
+			// vul de html data-routes aan dmv de content in de array
 			var directives = {
-
+				// data-bind genre
 				genre: {
+					// vul genres in de detailopmaak met text
 					text: function () {
+						// this verwijst naar genre binnen het JSON object
 						return this.genres;
 					}
 				},
-
+				// data-bind cover
 				cover: {
+					// vul de src in de detailopmaak met de cover
 					src: function(params){
+						// this verwijst naar cover binnen het JSON object
 						return this.cover;
 					}
 				},
-
+				// data-bind actors
 				actors: {
+					// data-bind actorPhoto
+					actorPhoto: {
+						src: function(params){
+							return this.url_photo;
+						}
+					},
+					// data-bind actor_name
 					actor_name: {
 						href: function(params){
 							return this.url_profile;
@@ -165,11 +181,6 @@ var biosApp = biosApp || {};
 					character: {
 						href: function(params){
 							return this.url_character;
-						}
-					},
-					actorPicture: {
-						src: function(params){
-							return this.url_photo;
 						}
 					}
 				},
@@ -213,21 +224,27 @@ var biosApp = biosApp || {};
 
 		// toggle van class
 		toggle: function(section){
+			// als het about active heeft of als movies of als detail active heeft verwijder dan active
 			if (document.querySelector('section[data-route="about"]').classList.contains('active') || document.querySelector('section[data-route="movies"]').classList.contains('active') || document.querySelector('section[data-route="detail"]').classList.contains('active')){
 				document.querySelector('section.active').classList.remove('active');
 			}
-			
+			// toggle active class
 			document.querySelector(section).classList.add('active');
 		}
 	}
-
+	// localstorage so naar andre
 	biosApp.storage = {
+		// zet iets in de local storage
+		// als je nieuwe wilt biosApp.storage.set(key, value)
 		set: function(key, value){
+			// localStorage is een bestaand object
 			localStorage.setItem(key, value);
 		},
+		// haal iets uit de localstorage
 		get: function(key){
 			return localStorage.getItem(key);
 		},
+		// verwijder iets uit de localstorage
 		remove: function(key){
 			localStorage.removeItem(key);
 		}
@@ -237,7 +254,7 @@ var biosApp = biosApp || {};
 	biosApp.underscore = {
 		//map reduce functie die de gemiddelde scores uitrekend en opslaat in het dataobject
 		averageScore: function(data){
-			//loop door de array
+			//loop door de array i = 0
 			for (i = 0; i < data.length; i++) { 
 				// check of er wel reviews zijn.
 				if(data[i].reviews.length > 0){
@@ -255,7 +272,6 @@ var biosApp = biosApp || {};
 		} else {
 			data[i].reviewScore = "No score";
 		}
-
 			// vul de content array met de nieuwe data
 			biosApp.contentHTML.movies = data;
 			// sla nieuwe op in localStorage zodat je niet elke keer hoeft te mappen/reducen
@@ -283,7 +299,6 @@ var biosApp = biosApp || {};
         });
 
 
-
 		// zet de templater aan het werk
 		biosApp.sections.detail(detailObj[0]);
 	}
@@ -291,18 +306,22 @@ var biosApp = biosApp || {};
 	biosApp.timestampConverter = {
 		// converteert een unix timestamp naar een epoch timestamp die er weer een Date object van maakt
 		timestamp: function(timestamp){
+			// de geparsde data van de timestamp heet nu date
 			var date = new Date( Date.parse(timestamp));
+			// geef date ^^^ terug aan de detail for loop
 			return date;
 		}
 	}
 
 	biosApp.mcHammer = {
 		init: function(){
-			// nieuwe instanties bovenop een element
+			// var menuToggle is new hammer blokje (HTML)
 			var menuToggle = new Hammer(document.querySelector('#blokje'));
-
+			// als er getapt wordt op menutoggle dus #blokje
 			menuToggle.on('tap', function(){
+				// console log blokje
 				console.log('blokje');
+				// toggle de active class van de main
 				document.querySelector("#main").classList.toggle("active");
 				
 			})

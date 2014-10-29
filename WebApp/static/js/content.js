@@ -17,30 +17,30 @@ var biosApp = biosApp || {};
 		movies: [
 		],
 
-		// method die alle genre titles uit de API haalt en zo een nieuwe navigate vult via de templater
+		// de omgezettaData verwerken in genresnav
                 genresNav: function(data){
-        	//hierin komen de objecten in met de links
-        	var genres = [];
-        	// deze array is om te checken of het al bestaat of niet
-        	var alreadyExists = [];
+                	//hierin komen de objecten in met de links
+                	var genres = [];
+                	// deze array is om te checken of het al bestaat of niet
+                	var alreadyExists = [];
 
-        	// loop door data object heen
-        	for (i = 0; i < data.length; i++) { 
-        		//loop vervolgens door de genres heen
-        		for (n = 0; n < data[i].genres.length; n++) { 
-        			// check of het genre al voorkomt in ons eigen genres array doormiddel van _.contains, zo niet maak dan een nieuw object aan en push dat object naar genres[]
-        			if(!_.contains(alreadyExists,data[i].genres[n])){
+                	// variabele i = 0 < dan lengte van array data (dus overal langs) i++ is voor +1 in de array loop
+                	for (i = 0; i < data.length; i++) { 
+                		//loop door de genres heen
+                		for (n = 0; n < data[i].genres.length; n++) { 
+                                        // check of het genre al voorkomt dmv _.contains zo niet maak dan nieuwe
+                			if(!_.contains(alreadyExists,data[i].genres[n])){
+                                                // genreobject = genrelink(in html) data is lokale variabele in de array
+                				genreObject = {
+                					genreLink: data[i].genres[n],
+                					url: "#/genres/" + data[i].genres[n]
+                				}
+                                                // genres toevoegen aan array
+                				genres.push(genreObject);
+                				alreadyExists.push(data[i].genres[n]);
 
-        				genreObject = {
-        					genreLink: data[i].genres[n],
-        					url: "#/genres/" + data[i].genres[n]
-        				}
-
-        				genres.push(genreObject);
-        				alreadyExists.push(data[i].genres[n]);
-
-        			}
-        		}
+                			}
+                		}
         	}
         
         	//zet transparancy aan het werk
