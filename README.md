@@ -8,7 +8,9 @@ Comment Your Code
 
 
 HTML 
-Place Scripts at the Bottom of Your Page
+
+Scripts onderaan de pagina
 
 CSS
-.LESS
+
+Gebruik maken van .LESS
