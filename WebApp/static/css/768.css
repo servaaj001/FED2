@@ -3,10 +3,10 @@
   width: 25%;
 }
 .l33 {
-  width: 33.33%;
+  width: 33%;
 }
 .l50 {
-  width: 50%;
+  width: 48%;
 }
 .l66 {
   width: 66.66%;
@@ -31,4 +31,10 @@
 .subheader ul li {
   display: inline;
   width: 50%;
+}
+#main {
+  display: block!important;
+}
+#blokje {
+  display: none!important;
 }

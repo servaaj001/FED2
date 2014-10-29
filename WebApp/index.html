@@ -8,13 +8,10 @@
         <link rel="stylesheet" href="static/css/style.css">
 	  	<link rel="stylesheet" media="only screen and (min-width: 512px)" href="static/css/512.css">
 		<link rel="stylesheet" media="only screen and (min-width: 768px)" href="static/css/768.css"> 
+		<link rel="stylesheet" media="only screen and (min-width: 1024px)" href="static/css/1024.css"> 
         <link rel="author" href="humans.txt">
     </head>
     <body>
-    <section data-route="loader">
-    	<p> LOADING</p>
-    </section>
-
 	<!-- MENU HEADER -->
 	<div class="header">
 		<div class="wrapper">
@@ -22,8 +19,7 @@
 				<a href="#/about"><h1>Filmapp</h1></a>
 			</div>
 			<div class="column s50">
-				<div class="blokje">
-
+				<div id="blokje">
 				</div>
 				<nav id="main">
 					<ul>
@@ -36,16 +32,10 @@
 		</div>
 	</div>
 
-	<!-- IMAGEHEADER -->
-<!-- 	<div class="imageheader">
-		<img src="static/link/background.jpg" alt="bioscoop stoelen" />
-	</div> -->
-
 	<!-- FILTER -->
-
 	<div class="subheader">
 		<div class="wrapper">
-			<div class="column s100">
+			<div class="column s100 no-padding">
 				<nav id="genresNav">
 					<ul data-bind="genres">
 						<li><a data-bind="genreLink" href=""></a></li>
@@ -64,11 +54,11 @@
 				<section data-route="movies" id="#movies">
 					<h2 data-bind="header"></h2>	
 					<div data-bind="movies">
-						<div class="column s100 m50 l33">
+						<div class="column s100 m100 l50 xl33 background">
 							<article data-bind="movie">
 								<header>
 									<h3><a data-bind="title"></a></h3>
-									<em><time data-bind="release_date"></time></em>
+									<em><span>Release date: </span><time data-bind="release_date"></time></em>
 									<h4>Average Score:</h4><span data-bind="reviewScore"></span>
 								</header>
 								<figure>
@@ -79,8 +69,8 @@
 						</div>
 					</div>
 				</section>
-			</div>
-			<div class="clearer"></div>
+				<div class="clearer"></div>
+			</div>	
 		</div>
 
 		<!-- ABOUT -->
@@ -105,7 +95,7 @@
 					</div>
 					<div class="column s100 no-padding">
 						<div class="releasedate">
-							<em>Release date: <time data-bind="release_date"></time></em>
+							<em><span>Release date:</span> <time data-bind="release_date"></time></em>
 						</div>
 					</div>
 					<div class="column s100 m33 no-padding">
@@ -132,10 +122,10 @@
 					<div class="column s100 no-padding">
 						<h3>Actors:</h3>
 						<div class="actorspage">
-								<div data-bind="actors">
+								<div data-bind="actors" class="actorlist">
+								<img data-bind="actorPicture">
 								<h3><a data-bind="actor_name"></a></h3>
 								<a data-bind="character" class="character"></a>
-								<img data-bind="actorPicture">
 								<div class="clearer"></div>
 							</div>
 						</div>
@@ -143,12 +133,13 @@
 
 					<div class="column s100 no-padding">
 						<h3>Reviews:</h3>
-						<div data-bind="reviews">
-							Score: <span data-bind="score"></span>
-							Created: <time></time></br>
+						<div data-bind="reviews" class="reviewList">
+							<span class="color">Score:</span> <span data-bind="score"></span>
+							<span class="color">Created:</span> <time data-bind="created"><span data-bind="createdDate"></span></time>
+							<span class="color">Update:</span> <time data-bind="updated"><span data-bind="updatedDate"></span></time>
+							<span class="color">Comment:</span><div data-bind="review_text"></div><br>
 						</div>
 					</div>
-
 				</section>
 
 			</div>
@@ -167,9 +158,11 @@
 		<script src="static/js/transparency.min.js"></script>
 		<script src="static/js/underscore.min.js"></script>
 		<script src="static/js/routie.js"></script>
+				<script src="static/js/hammer.min.js"></script>
 		<script src="static/js/xhr.js"></script>
 		<script src="static/js/content.js"></script>
 	    <script src="static/js/app.js"></script>
 		<script src="static/js/pace.min.js"></script>
+
     </body>
 </html>

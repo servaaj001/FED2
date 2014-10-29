@@ -13,6 +13,8 @@ var biosApp = biosApp || {};
 			biosApp.router.init();
 			// Roep in de 'init'-methode van het 'controller'-object, de 'init'-methode van het 'sections'-object aan
 			biosApp.sections.init();
+
+			biosApp.mcHammer.init();
 		}
 	}
 
@@ -33,7 +35,6 @@ var biosApp = biosApp || {};
 		},
 		// haal/get get json bestand op mbv het xhr object met de parseJson functie hieronder
 		getApi: function(){
-			setInterval(function () {alert("Hello")}, 3000);
 			biosApp.xhr.trigger("GET", "http://dennistel.nl/movies", biosApp.api.parseJson )
 		},
 		// 
@@ -103,7 +104,7 @@ var biosApp = biosApp || {};
 		},
 
 		// #movies voorzien van de html die in de variabele contentHTML staat
-		movies:function(array){
+		movies: function(array){
 			var moviesContent = {
 				'header': "Favorite movies",
 				'movies': array
@@ -133,6 +134,13 @@ var biosApp = biosApp || {};
 
 		//detail pagina
 		detail: function(array){
+
+
+						// doorloop de reviews om de timestamps te converteren naar leesbare data en voeg die toe met een nieuwe key
+			for (i = 0; i < array.reviews.length; i++) { 
+				array.reviews[i].createdDate = biosApp.timestampConverter.timestamp(array.reviews[i].created_at).toLocaleString();
+				array.reviews[i].updatedDate = biosApp.timestampConverter.timestamp(array.reviews[i].updated_at).toLocaleString();
+			}
 
 			var directives = {
 
@@ -176,6 +184,11 @@ var biosApp = biosApp || {};
 						datetime: function(params){
 							return this.updated_at;
 						}
+					},
+					review_text: {
+						text: function () {
+							return this.review_text;
+						}
 					}
 
 				}
@@ -183,6 +196,7 @@ var biosApp = biosApp || {};
 
 			Transparency.render(document.querySelector('section[data-route="detail"]'),array, directives);
 		},
+
 		//maak de genres navigatie aan
 		genresNavigatie: function(array){
 
@@ -271,9 +285,29 @@ var biosApp = biosApp || {};
 
 
 		// zet de templater aan het werk
-		biosApp.sections.detail(detailObj);
+		biosApp.sections.detail(detailObj[0]);
 	}
 }
+	biosApp.timestampConverter = {
+		// converteert een unix timestamp naar een epoch timestamp die er weer een Date object van maakt
+		timestamp: function(timestamp){
+			var date = new Date( Date.parse(timestamp));
+			return date;
+		}
+	}
+
+	biosApp.mcHammer = {
+		init: function(){
+			// nieuwe instanties bovenop een element
+			var menuToggle = new Hammer(document.querySelector('#blokje'));
+
+			menuToggle.on('tap', function(){
+				console.log('blokje');
+				document.querySelector("#main").classList.toggle("active");
+				
+			})
+		}
+	}
 
 
 	// roept de init binnen het controller object aan, zodat er gestart wordt.

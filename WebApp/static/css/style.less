@@ -118,7 +118,7 @@ section {
 	vertical-align: top;
 
 	&.no-padding {
-		padding: 0;
+		padding: 0 2%;
 	}
 }
 .s25 {
@@ -180,7 +180,7 @@ section {
 		li {
 			display: block;
 			width: 25%;
-			padding: 0.5em 0;
+			padding: 0;
 		}
 	}
 }
@@ -189,31 +189,54 @@ section {
 	background: @base;
 }
 
-.imageheader {
-	max-height: 150px;
-	max-width: 100% auto;
-	text-align: center;
-	background-repeat: repeat-x;
-}
-
-
-.releasedate {
+.releasedate & .reviewScore {
 	display: block;
 	width: 100%;
 	padding: 0 0 1em 0;
 }
 
 .actorspage {
+	.actorlist {
+	a {
+		vertical-align: top;
+	}
+		.actor {
+			border-bottom: solid 1px @offwhite;
+		}
+		.actorPicture {
+			display: block;
+			float: left;
+			width: 50%;
 
-	img {
-		display: none;
+			img {
+				max-width: 100%;
+				height: auto;
+			}
+		}
+
+		.charactername {
+			width: 70%;
+		}
+		h3 {
+			width: 30%;
+			display: block;
+			float: right;
+			vertical-align: top;
+		}
+	}
+}
+
+.reviewList {
+	span {
+		width: 100%;
+		display: block;
+		margin-right: 1em;
 	}
 }
 
 footer {
 	width: 100%;
 }
-
 
 .pace .pace-progress {
   background: @offwhite;
@@ -233,17 +256,30 @@ footer {
   display: none;
 }
 
-.blokje {
-	background: @offwhite;
-	width: 50px;
-	height: 50px;
-	position: absolute;
-	right: 40px;
-	top: 40px;
+.color {
+	color: @orange;
+}
+
+#blokje {
+	width: 35px;
+	height: 35px;
+	background: url('../link/menu.svg') no-repeat 6px;
+	position: relative;
+	text-align: right;
+	right: -100px;
+	top: 32px;
 	cursor: pointer;
+	display: block!important;
+}
+
+.background {
+	background: #2D2D2D;
+	margin-right: 3px;
+	margin-bottom: 3px;
 }
 
 #main {
+	display: none;
 
 	&.active {
 		display: block;
