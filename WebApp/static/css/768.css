@@ -1,0 +1,34 @@
+/* layout / column */
+.l25 {
+  width: 25%;
+}
+.l33 {
+  width: 33.33%;
+}
+.l50 {
+  width: 50%;
+}
+.l66 {
+  width: 66.66%;
+}
+.l75 {
+  width: 75%;
+}
+.l100 {
+  width: 100%;
+}
+.shide,
+.mhide,
+.xlhide {
+  display: block;
+}
+.lhide {
+  display: none;
+}
+.subheader {
+  background: #f2f2f2;
+}
+.subheader ul li {
+  display: inline;
+  width: 50%;
+}

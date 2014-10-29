@@ -1,0 +1,31 @@
+/* layout / column */
+.xl25 {
+  width: 25%;
+}
+.xl33 {
+  width: 33.33%;
+}
+.xl50 {
+  width: 50%;
+}
+.xl66 {
+  width: 66.66%;
+}
+.xl75 {
+  width: 75%;
+}
+.xl100 {
+  width: 100%;
+}
+.shide,
+.mhide,
+.lhide {
+  display: block;
+}
+.xlhide {
+  display: none;
+}
+.movies {
+  width: 25%;
+  float: left;
+}

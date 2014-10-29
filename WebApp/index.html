@@ -6,53 +6,170 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>My Favorite Movies</title>
         <link rel="stylesheet" href="static/css/style.css">
+	  	<link rel="stylesheet" media="only screen and (min-width: 512px)" href="static/css/512.css">
+		<link rel="stylesheet" media="only screen and (min-width: 768px)" href="static/css/768.css"> 
         <link rel="author" href="humans.txt">
     </head>
     <body>
-		<main id="content">
-			<h1>FilmApp</h1>
+    <section data-route="loader">
+    	<p> LOADING</p>
+    </section>
 
-			<header>
-				<nav>
+	<!-- MENU HEADER -->
+	<div class="header">
+		<div class="wrapper">
+			<div class="column s50">
+				<a href="#/about"><h1>Filmapp</h1></a>
+			</div>
+			<div class="column s50">
+				<div class="blokje">
+
+				</div>
+				<nav id="main">
 					<ul>
-						<li><a href="#about">About</a></li>
-						<li><a href="#movies">Movies</a></li>
+						<li><a href="#/about">About</a></li>
+						<li><a href="#/movies">Movies</a></li>
 					</ul>
 				</nav>
-			</header>
+			</div>
+			<div class="clearer"></div>
+		</div>
+	</div>
 
-			<!-- about -->
-			<section data-route="about">
-					<header>
+	<!-- IMAGEHEADER -->
+<!-- 	<div class="imageheader">
+		<img src="static/link/background.jpg" alt="bioscoop stoelen" />
+	</div> -->
+
+	<!-- FILTER -->
+
+	<div class="subheader">
+		<div class="wrapper">
+			<div class="column s100">
+				<nav id="genresNav">
+					<ul data-bind="genres">
+						<li><a data-bind="genreLink" href=""></a></li>
+					</ul>
+				</nav>
+			</div>
+			<div class="clearer"></div>
+		</div>
+	</div>
+
+	<main id="content">
+
+		<!-- FILMOVERVIEW -->
+		<div class="wrapper">
+			<div class="column s100">
+				<section data-route="movies" id="#movies">
+					<h2 data-bind="header"></h2>	
+					<div data-bind="movies">
+						<div class="column s100 m50 l33">
+							<article data-bind="movie">
+								<header>
+									<h3><a data-bind="title"></a></h3>
+									<em><time data-bind="release_date"></time></em>
+									<h4>Average Score:</h4><span data-bind="reviewScore"></span>
+								</header>
+								<figure>
+									<img data-bind="cover" src="" alt="">
+								</figure>
+								<p data-bind="plot"></p>
+							</article>
+						</div>
+					</div>
+				</section>
+			</div>
+			<div class="clearer"></div>
+		</div>
+
+		<!-- ABOUT -->
+		<div class="wrapper">
+			<div class="column s100">
+				<section data-route="about" id="#about">
 						<h2 data-bind="title"></h2>
 						<p data-bind="description"></p>
-					</header>
-			</section>
+				</section>
+			</div>
+		</div>
 
-			<!-- movies-->
-			<section data-route="movies">
-				<h2 data-bind="header"></h2>	
-				<div data-bind="movies">
-					<article data-bind="movie">
-						<header>
-							<h3 data-bind="title"></h3>
-							<em>Release date: <time data-bind="releaseDate"></time></em>
-						</header>
+		<!-- DETAILPAGINA -->
+		<div class="wrapper">
+			<div class="column s100">
+				<section data-route="detail">
+					<div class="column s100 no-padding">
+						<a href="#/movies"><span>Back to overview</span></a>
+					</div>
+					<div class="column s100 no-padding">
+						<h2 data-bind="title"></h2>
+					</div>
+					<div class="column s100 no-padding">
+						<div class="releasedate">
+							<em>Release date: <time data-bind="release_date"></time></em>
+						</div>
+					</div>
+					<div class="column s100 m33 no-padding">
+						<img data-bind="cover" src="" alt="" />
+					</div>
+					<div class="column s100 m66 no-padding">
+						<h3>Average Score:</h3><span data-bind="reviewScore"></span>
+						<h3>Description:</h3>
+						<p data-bind="plot"></p>
+						<h3>Genre:</h3>
+						<p data-bind="genre"></p>
+						<div class="clearer"></div>
+					</div>
+					
+					<div class="column s100 no-padding">
+						<div class="directors">
+							<h3>Directors:</h3>
+							<ul data-bind="directors">
+								<li data-bind="name"></li>
+							</ul>
+						</div>
+					</div>
+					
+					<div class="column s100 no-padding">
+						<h3>Actors:</h3>
+						<div class="actorspage">
+								<div data-bind="actors">
+								<h3><a data-bind="actor_name"></a></h3>
+								<a data-bind="character" class="character"></a>
+								<img data-bind="actorPicture">
+								<div class="clearer"></div>
+							</div>
+						</div>
+					</div>
 
-						<figure>
-							<img data-bind="cover" src="" alt="">
-						</figure>
+					<div class="column s100 no-padding">
+						<h3>Reviews:</h3>
+						<div data-bind="reviews">
+							Score: <span data-bind="score"></span>
+							Created: <time></time></br>
+						</div>
+					</div>
 
-						<p data-bind="description"></p>
-					</article>
-				</div>
-			</section>
-		</main>
-		
+				</section>
+
+			</div>
+			<div class="clearer"></div>
+		</div>
+	</main>
+	<footer>
+		<div class="wrapper">
+			<div class="column s100"> 
+				<span>&copy; Copyright BRTHMRK 2014</span> 
+			</div>
+		</div>
+	</footer>
+</div>
 		<!-- scripts -->
-		<script src="static/js/jquery-1.7.1.min.js"></script>
 		<script src="static/js/transparency.min.js"></script>
+		<script src="static/js/underscore.min.js"></script>
 		<script src="static/js/routie.js"></script>
+		<script src="static/js/xhr.js"></script>
+		<script src="static/js/content.js"></script>
 	    <script src="static/js/app.js"></script>
+		<script src="static/js/pace.min.js"></script>
     </body>
 </html>

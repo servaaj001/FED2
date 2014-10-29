@@ -1,123 +1,282 @@
-// NameSpace bestaat APP al verander deze dan niet en of maak nieuwe aan
-var app = app || {};
+// NameSpace bestaat biosApp al verander deze dan niet en of maak nieuwe aan
+var biosApp = biosApp || {};
 
 // self invoking anonymous function (IIFE) functie dus niet meer in de global scope
 (function(){
 
-	app.controller = {
+	biosApp.controller = {
 
 		init:function() {
+			// Roep in de 'init'-methode van het 'controller'-object, de 'init'-methode van het 'api'-object aan
+			biosApp.api.init();
 			// Roep in de 'init'-methode van het 'controller'-object, de 'init'-methode van het 'router'-object aan
-			app.router.init();
-			app.sections.init();
+			biosApp.router.init();
+			// Roep in de 'init'-methode van het 'controller'-object, de 'init'-methode van het 'sections'-object aan
+			biosApp.sections.init();
 		}
 	}
 
-	// Maak in 'app.js' een nieuw 'router'-object aan met een 'init'-methode
-	app.router = {
+	// object om de api op te halen en te parsen met JSON.
+	biosApp.api = {
+		init: function(){
+			// als movies in localStorage zit
+			if("movies" in localStorage){
+				// doe dan biosApp.api.parseJson op storage get en haal de movies op
+				this.parseJson(biosApp.storage.get("movies"))
+				console.log('ik zit in localStorage');
+			} 
+			// probeer anders de api opnieuw op te halen
+			else {
+				this.getApi()
+				console.log('geen localStorage');
+			}
+		},
+		// haal/get get json bestand op mbv het xhr object met de parseJson functie hieronder
+		getApi: function(){
+			setInterval(function () {alert("Hello")}, 3000);
+			biosApp.xhr.trigger("GET", "http://dennistel.nl/movies", biosApp.api.parseJson )
+		},
+		// 
+		parseJson: function(data){
+			var parsedData = JSON.parse(data);
+			biosApp.underscore.averageScore(parsedData);
+			biosApp.contentHTML.genresNav(parsedData);
+		}
+	}
+
+	// Maak in 'biosApp.js' een nieuw 'router'-object aan met een 'init'-methode
+	biosApp.router = {
 		init:function() {
 			// Voeg aan de 'init'-methode de 'routes' toe voor de 'about' en 'movies' sections
 			routie({
-				'about': function() {
-			    	// url/#about
-			    	app.sections.toggle('section[data-route="about"]');
-			    	// Laat voor beide routes in de console zien welke route aangeklikt is
-			    	console.log("about")
-			    },
-			    'movies': function() {
-			    	// url/#movies
-			    	app.sections.toggle('section[data-route="movies"]');
-			    	// Laat voor beide routes in de console zien welke route aangeklikt is
-			    	(console.log("movies"))
-			    }
+				// is de url #/about (meegegeven in de html)
+				'/about': function() {
+					biosApp.sections.movies(biosApp.contentHTML.movies)
+					biosApp.sections.toggle('section[data-route="about"]');
+					console.log("about");
+				},
+				// is de url #/movies (meegegeven in de html)
+				'/movies': function() {
+					biosApp.sections.movies(biosApp.contentHTML.movies)
+					biosApp.sections.toggle('section[data-route="movies"]');
+					console.log("movies");
+				},
+				// als de url genres/beschikbaar genre is
+				'/genres/:genre': function(genre) {
+					//filter de movies array (die de templating aan de gang zet) en toggle daarna de active class
+			   		biosApp.underscore.filter(genre, biosApp.contentHTML.movies);
+			   		biosApp.sections.toggle('section[data-route="movies"]');
+			   		console.log("genre")
+				},
+				// als de url /movies/ meegegeven id is
+				'/movies/:id': function(id) {
+			   		biosApp.underscore.getDetail(id, biosApp.contentHTML.movies);
+			   		biosApp.sections.toggle('section[data-route="detail"]');
+			   		console.log("id")
+				},
+				// anything
+				'*': function() {
+					biosApp.sections.toggle('section[data-route="about"]');
+					console.log("anything")
+				}
 			});
 		}
 	}
 
-	// Maak een 'content'-object aan met daarin een 'about'-object en een 'movies'-array.
-	app.content = {
-		
-		// Het 'about'-object bevat twee properties; 'titel' en 'description'
-		about: {
-			title: "About this app",
-			description: "Cities fall but they are rebuilt. heroes die but they are remembered. the man likes to play chess; let's get him some rocks. circumstances have taught me that a man's ethics are the only possessions he will take beyond the grave. multiply your anger by about a hundred, kate, that's how much he thinks he loves you. bruce... i'm god. multiply your anger by about a hundred, kate, that's how much he thinks he loves you. no, this is mount everest. you should flip on the discovery channel from time to time. but i guess you can't now, being dead and all. rehabilitated? well, now let me see. you know, i don't have any idea what that means. mister wayne, if you don't want to tell me exactly what you're doing, when i'm asked, i don't have to lie. but don't think of me as an idiot. rehabilitated? well, now let me see. you know, i don't have any idea what that means. cities fall but they are rebuilt. heroes die but they are remembered. no, this is mount everest. you should flip on the discovery channel from time to time. but i guess you can't now, being dead and all."
-		},
-		
-		// De 'movies'-array bevat voor elke film een object met de properties; 'title', 'releaseDate', 'description' en 'cover'
-		movies: [
-			{
-				// 4 properties titel, releaseDate, description en Cover
-				title: "Shawshank Redemption", 
-				releaseDate: "14 October 1994", 
-				description: "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.", 
-				cover: "images/shawshank-redemption.jpg"
-			},
-			{
-				title: "The Godfather", 
-				releaseDate: "24 March 1972", 
-				description: "The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.", 
-				cover: "images/the-godfather.jpg"
-			},
-			{
-				title: "Pulp Fiction", 
-				releaseDate: "14 October 1994", 
-				description: "The lives of two mob hit men, a boxer, a gangster's wife, and a pair of diner bandits intertwine in four tales of violence and redemption.",
-				cover: "images/pulp-fiction.jpg"
-			},
-			{
-				title: "The Dark Knight", 
-				releaseDate: "18 July 2008", 
-				description: "When Batman, Gordon and Harvey Dent launch an assault on the mob, they let the clown out of the box, the Joker, bent on turning Gotham on itself and bringing any heroes down to his level.", 
-				cover: "images/the-dark-knight.jpg"
-			}
-		]
-	}
-
-	// Maak in 'app.js' een nieuw 'sections'-object aan met een 'init'-methode, een 'about'-methode, een 'movies'-methode
-	app.sections = {
+	// Maak in 'biosApp.js' een nieuw 'sections'-object aan met een 'init'-methode, een 'about'-methode, een 'movies'-methode
+	biosApp.sections = {
 		init:function(){
+			// start biosapp.sections.about
 			this.about();
-			this.movies();
 		},
 
-		// #about voorzien van de html die in de variabele content staat.
+		// #about voorzien van de html die in de variabele contentHTML staat.
 		about:function(){
+			// variabele about content is
 			var aboutContent = {
-				'title': app.content.about.title,
-				'description': app.content.about.description
+				// haal de titel en description uit content.js 
+				'title': biosApp.contentHTML.about.title,
+				'description': biosApp.contentHTML.about.description
 			};
-			// document.querySelector i.p.v. $ bij jQuery (bron: http://blog.romanliutikov.com/post/63383858003/how-to-forget-about-jquery-and-start-using-native)
+			// stop de content uit contentHTML in de section about (title en description)
 			Transparency.render(document.querySelector('section[data-route="about"]'),aboutContent);
-
 		},
 
-		movies:function(){
+		// #movies voorzien van de html die in de variabele contentHTML staat
+		movies:function(array){
 			var moviesContent = {
-				'title': "Favorite movies",
-				'movies': app.content.movies
+				'header': "Favorite movies",
+				'movies': array
 			}
 
-			// plaatst de source van de plaatjes in de img tag
+			// dit zorgt ervoor dat de src van img tag veranderd
 			var directives = {
+				// gaat opzoek naar data route movies > cover > src
 				movies: {
 					cover: {
 						src: function(params){
 							return this.cover
 						}
+					},
+					// dit zorgt ervoor dat het desbetreffende id wordt meegegegeven in de url
+					title: {
+						href: function(params){
+							return "#/movies/" + this.id;
+						}
 					}
 				}
 			}
 
+			// zorg met transparancy dat de sectie met data route movies wordt aangevuld met de title en de array en de directives
 			Transparency.render(document.querySelector('section[data-route="movies"]'),moviesContent, directives);
 		},
 
-		// toggle de active class voor alle sections.
+		//detail pagina
+		detail: function(array){
+
+			var directives = {
+
+				genre: {
+					text: function () {
+						return this.genres;
+					}
+				},
+
+				cover: {
+					src: function(params){
+						return this.cover;
+					}
+				},
+
+				actors: {
+					actor_name: {
+						href: function(params){
+							return this.url_profile;
+						}
+					},
+					character: {
+						href: function(params){
+							return this.url_character;
+						}
+					},
+					actorPicture: {
+						src: function(params){
+							return this.url_photo;
+						}
+					}
+				},
+
+				reviews: {
+					created: {
+						datetime: function(params){
+							return this.created_at;
+						}
+					},
+					updated: {
+						datetime: function(params){
+							return this.updated_at;
+						}
+					}
+
+				}
+			}
+
+			Transparency.render(document.querySelector('section[data-route="detail"]'),array, directives);
+		},
+		//maak de genres navigatie aan
+		genresNavigatie: function(array){
+
+			genreUrl = {
+				genreLink: {
+					href: function(params){
+						return this.url;
+					}
+				}
+			}
+
+			Transparency.render(document.querySelector('ul[data-bind="genres"]'), array, genreUrl);
+		},
+
+		// toggle van class
 		toggle: function(section){
-			document.querySelector(section).classList.toggle('active');
+			if (document.querySelector('section[data-route="about"]').classList.contains('active') || document.querySelector('section[data-route="movies"]').classList.contains('active') || document.querySelector('section[data-route="detail"]').classList.contains('active')){
+				document.querySelector('section.active').classList.remove('active');
+			}
+			
+			document.querySelector(section).classList.add('active');
 		}
 	}
 
-		// roept de init binnen het controller object aan, zodat er gestart wordt.
-		app.controller.init();
+	biosApp.storage = {
+		set: function(key, value){
+			localStorage.setItem(key, value);
+		},
+		get: function(key){
+			return localStorage.getItem(key);
+		},
+		remove: function(key){
+			localStorage.removeItem(key);
+		}
+	}
 
-	})();
+	// map, reduce, filter
+	biosApp.underscore = {
+		//map reduce functie die de gemiddelde scores uitrekend en opslaat in het dataobject
+		averageScore: function(data){
+			//loop door de array
+			for (i = 0; i < data.length; i++) { 
+				// check of er wel reviews zijn.
+				if(data[i].reviews.length > 0){
+					//map functie die de alleen de score returned en toewijst aan een nieuwe key: reviewScore
+					data[i].reviewScore = _.map(data[i].reviews, function(num, key) {
+						return {
+							reviewScore: num.score,
+						};
+					});
+				//reduce functie die de reviewScores bij elkaar optelt en deelt door de lengte van de array
+				data[i].reviewScore = _.reduce(data[i].reviewScore, function(memo, num){ 
+					return memo + num.reviewScore; 
+				}, 0 ) / data[i].reviewScore.length;
+			// is er geen review, zet dan deze string
+		} else {
+			data[i].reviewScore = "No score";
+		}
+
+			// vul de content array met de nieuwe data
+			biosApp.contentHTML.movies = data;
+			// sla nieuwe op in localStorage zodat je niet elke keer hoeft te mappen/reducen
+			biosApp.storage.set("movies", JSON.stringify(data))
+			// zet de templating aan de gang
+			biosApp.sections.movies(data);
+		}
+	},
+
+	filter: function(key,array){
+		// filter door de meegegeven array en sla die op in filtered
+		filtered = _.filter(array, function(array){ 
+			//return alle objecten die de key in array.genres hebben staan
+			return _.contains(array.genres, key);
+		});
+
+		// zet de templating aan de gang
+		biosApp.sections.movies(filtered);
+	},
+
+	getDetail: function(key, array){
+		
+		detailObj = _.filter(array, function (movie) {
+      	  return movie.id == key;
+        });
+
+
+
+		// zet de templater aan het werk
+		biosApp.sections.detail(detailObj);
+	}
+}
+
+
+	// roept de init binnen het controller object aan, zodat er gestart wordt.
+	biosApp.controller.init();
+
+})();
